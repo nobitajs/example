@@ -9,5 +9,5 @@ module.exports = ctx => {
       });
       return result;
     }
-  }
-}
+  };
+};
