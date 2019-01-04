@@ -1,11 +1,7 @@
-const path = require('path');
-
-config = {
+const config = {
   temp: {
-    ext: 'html',
-    path: path.join(__dirname, '../views'),
-  },
-
+    path: './views'
+  }
 };
 
 module.exports = config;
