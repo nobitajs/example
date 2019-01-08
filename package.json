@@ -13,7 +13,8 @@
   "scripts": {
     "local": "cross-env RUN_ENV=local nodemon app.js --config nodemon.json",
     "prod": "pm2 start run.json",
-    "stop": "pm2 stop demo",
+    "stop": "pm2 stop run.json",
+    "restart": "pm2 restart run.json",
     "debug": "cross-env RUN_ENV=local node --inspect app.js"
   },
   "repository": {
