@@ -15,6 +15,7 @@
     "prod": "pm2 start run.json",
     "stop": "pm2 stop run.json",
     "restart": "pm2 restart run.json",
+    "clean": "pm2 delete numsecurity",
     "debug": "cross-env RUN_ENV=local node --inspect app.js"
   },
   "repository": {
