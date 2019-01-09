@@ -16,6 +16,8 @@
     "stop": "pm2 stop run.json",
     "restart": "pm2 restart run.json",
     "clean": "pm2 delete numsecurity",
+    "list": "pm2 list",
+    "logs": "pm2 logs",
     "debug": "cross-env RUN_ENV=local node --inspect app.js"
   },
   "repository": {
