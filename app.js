@@ -1,5 +1,6 @@
 
 const app = require('nobita');
-const notfound = require('./app/middleware/notfound');
 
-app.use(notfound);
+app.on('error', (err, ctx) => {
+  // ...
+});
