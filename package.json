@@ -5,8 +5,8 @@
   "main": "app.js",
   "dependencies": {
     "cross-env": "^5.0.0",
-    "nobita": "^0.6.0",
     "lodash": "4.17.10",
+    "nobita": "^0.6.3",
     "nodemon": "^1.18.9",
     "pm2": "2.10.4"
   },
