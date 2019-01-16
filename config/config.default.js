@@ -9,7 +9,7 @@ const config = {
     }
   },
 
-  middleware: [ 'notfound' ],
+  middlewares: [ 'notfound' ],
 };
 
 module.exports = config;
