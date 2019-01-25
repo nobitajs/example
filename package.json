@@ -6,7 +6,7 @@
   "dependencies": {
     "cross-env": "^5.0.0",
     "lodash": "4.17.10",
-    "nobita": "^0.7.9",
+    "nobita": "^0.8.0",
     "nodemon": "^1.18.9",
     "pm2": "2.10.4"
   },
