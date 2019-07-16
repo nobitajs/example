@@ -5,19 +5,14 @@
   "main": "app.js",
   "dependencies": {
     "cross-env": "^5.0.0",
-    "lodash": "4.17.10",
-    "nobita": "^0.9.11",
-    "nodemon": "^1.18.9",
-    "pm2": "2.10.4"
+    "lodash": "4.17.14",
+    "nobita": "^0.9.17",
+    "nobita-scripts": "0.1.0"
   },
   "scripts": {
-    "local": "cross-env RUN_ENV=local nodemon app.js --config nodemon.json",
-    "prod": "pm2 start run.json",
-    "stop": "pm2 stop run.json",
-    "restart": "pm2 restart run.json",
-    "clean": "pm2 delete run.json",
-    "list": "pm2 list",
-    "logs": "pm2 logs",
+    "local": "nobita-scripts local ./app.js",
+    "prod": "nobita-scripts prod ./app.js -i 2 --silent false -n demo",
+    "stop": "nobita-scripts stop demo",
     "debug": "cross-env RUN_ENV=local node --inspect app.js"
   },
   "repository": {
