@@ -11,7 +11,7 @@
   },
   "scripts": {
     "local": "nobita-scripts local ./app.js",
-    "prod": "nobita-scripts prod ./app.js -i 2 -n demo",
+    "prod": "nobita-scripts prod ./app.js -i 2 -n demo --detached",
     "stop": "nobita-scripts stop demo",
     "debug": "cross-env RUN_ENV=local node --inspect app.js"
   },
