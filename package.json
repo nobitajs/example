@@ -7,12 +7,12 @@
     "cross-env": "^5.0.0",
     "lodash": "4.17.15",
     "nobita": "^0.9.17",
-    "nobita-scripts": "0.1.2"
+    "nobita-scripts": "0.3.02"
   },
   "scripts": {
-    "local": "nobita-scripts local ./app.js",
-    "prod": "nobita-scripts prod ./app.js -i 2 -n demo --detached",
-    "stop": "nobita-scripts stop demo",
+    "local": "ns local ./app.js",
+    "prod": "ns start ./app.js -i 2 -n demo --detached",
+    "stop": "ns stop demo",
     "debug": "cross-env RUN_ENV=local node --inspect app.js"
   },
   "repository": {
