@@ -5,9 +5,8 @@
   "main": "app.js",
   "dependencies": {
     "cross-env": "^5.0.0",
-    "lodash": "4.17.15",
-    "nobita": "^0.9.17",
-    "nobita-scripts": "0.3.02"
+    "nobita": "^0.9.37",
+    "nobita-scripts": "0.3.9"
   },
   "scripts": {
     "local": "ns local ./app.js",
