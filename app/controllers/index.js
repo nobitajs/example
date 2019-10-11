@@ -1,8 +1,10 @@
 
-module.exports = {
-  async index() {
-    const ctx = this;
-    ctx.body = ctx.nunjucks.render('index.html', { name: 'Hello Nobita' });
-  }
-
+module.exports = (app) => {
+  return {
+    index() {
+      const { ctx } = this;
+      ctx.helper.utils.sum();
+      return ctx.body = 'index';
+    }
+  };
 };

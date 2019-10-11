@@ -1,7 +1,7 @@
 module.exports = (app) => {
   return {
     async getName() {
-      const ctx = this;
+      const { ctx } = this;
       return { name: 'hello Nobita' };
     }
   };
