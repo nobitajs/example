@@ -5,12 +5,12 @@
   "main": "app.js",
   "dependencies": {
     "cross-env": "^5.0.0",
-    "nobita": "^0.9.41",
+    "nobita": "^0.9.46",
     "nobita-scripts": "0.3.9"
   },
   "scripts": {
     "local": "ns local ./app.js",
-    "prod": "ns start ./app.js -i 2 -n demo --detached",
+    "prod": "ns start ./app.js -i 1 -n demo --detached",
     "stop": "ns stop demo",
     "debug": "ns local ./app.js --inspect"
   },
