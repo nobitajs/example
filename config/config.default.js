@@ -8,7 +8,7 @@ const config = {
       console.log('http://localhost:6001');
     }
   },
-  middlewares: [  ],
+  middlewares: [],
 };
 
 module.exports = config;
