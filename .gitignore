@@ -2,7 +2,9 @@
 .AppleDouble
 .LSOverride
 node_modules/
-logs/*.log
 .vscode/
 *.rdb
 dump.rdb
+.idea/
+package-lock.json
+dist

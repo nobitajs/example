@@ -1,44 +1,75 @@
-# ![avatar](https://api.iamtang.com/images/nobita.png)Nobita
-![avatar](https://api.iamtang.com/images/bf47d0f9d72a6059be3961992234349b023bbad5.jpg)
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
+</p>
 
+[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
+[travis-url]: https://travis-ci.org/nestjs/nest
+[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
+[linux-url]: https://travis-ci.org/nestjs/nest
+  
+  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
+<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
+<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
+<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
+<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
+  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
+## Description
 
-[![NPM version][npm-image]][npm-url]
-[![NPM script][npm-script]][npm-url]
-[![NPM size][npm-size]][npm-url]
-[![NPM downloads][npm-downloads]][npm-download-url]
-[![NPM license][npm-license]][npm-url]
-[![NPM node][npm-node]][npm-url]
-[![NPM commit][npm-commit]][npm-url]
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-[npm-url]: 
-https://npmjs.org/package/nobita
-[npm-download-url]:
-https://npmcharts.com/compare/nobita?minimal=true
+## Installation
 
-[npm-image]: https://img.shields.io/npm/v/nobita.svg?style=flat-square
-[npm-script]:
-https://img.shields.io/github/languages/top/iamtang/nobita.svg
-[npm-size]:
-https://img.shields.io/bundlephobia/min/nobita.svg
-[npm-downloads]:
-https://img.shields.io/npm/dm/nobita.svg
-[npm-license]:
-https://img.shields.io/npm/l/nobita.svg
-[npm-node]:
-https://img.shields.io/node/v/nobita.svg
-[npm-commit]:
-https://img.shields.io/github/last-commit/iamtang/nobita.svg
-## 介绍
-Nobita 是一个基于Koa而诞生的一款框架。
-
-[官方网站](https://iamtang.github.io/nobita/)
-
-```js
-// app.js
-const app = require('nobita');
+```bash
+$ npm install
 ```
 
+## Running the app
+
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
 ```
-$ node app.js
+
+## Test
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
 ```
+
+## Support
+
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+
+## Stay in touch
+
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
+
+## License
+
+  Nest is [MIT licensed](LICENSE).
