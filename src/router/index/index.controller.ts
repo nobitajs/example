@@ -1,4 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Inject } from '@nestjs/common';
+import { MongoService } from '../../common/providers/mongodb/mongodb.service';
 
 @Controller('/')
 export class IndexController {

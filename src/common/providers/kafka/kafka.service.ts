@@ -34,6 +34,10 @@ export class KafkaService {
 		this.send(data, 'error');
 	}
 
+	public warn(data: object | string) {
+		this.send(data, 'warn');
+	}
+
 	private send(data, type) {
 		const logData = ({
 			logType: type,
@@ -45,10 +49,11 @@ export class KafkaService {
 			data
 		});
 		if (this.env == 'local') {
-			console.error(logData);
+			console.log(logData);
 		} else {
+			const kafkaConfig = this.config.get('kafka') || {};
 			this.producer.send([{
-				topic: 'zzc_front_end_nodejs',
+				topic: kafkaConfig.topic,
 				messages: JSON.stringify(logData)
 			}], (err) => {
 				err && console.log(err);

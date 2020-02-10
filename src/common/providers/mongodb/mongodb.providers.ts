@@ -24,7 +24,8 @@ for (const key in AllSchema) {
 	provides.push({
 		provide: key.toLocaleUpperCase(),
 		useFactory: (connection: mongoose.createConnection, kafka: KafkaService) => {
-			return new MongoService(connection.model(key, new mongoose.Schema(AllSchema[key]), key), kafka);
+			console.log();
+			return new MongoService(connection.name, key, connection.model(key, new mongoose.Schema(AllSchema[key]), key), kafka);
 		},
 		inject: ['MONGODB_CONNECTION', KafkaService],
 	});

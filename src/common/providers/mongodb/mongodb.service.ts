@@ -5,14 +5,19 @@ import { KafkaService } from '../kafka/kafka.service';
 @Injectable()
 export class MongoService {
 
-	constructor(model, kafka) {
+	constructor(databaseName, collectionName, model, kafka) {
+		this.databaseName = databaseName;
+		this.collectionName = collectionName;
 		this.model = model;
 		this.kafka = kafka;
 	}
+	databaseName: string
+	collectionName: string
 	model: Model
 	kafka: KafkaService
 
 	async find(sql: any, options: any = {}): Promise<any> {
+		const startTime = new Date().getTime();
 		options.page = +(options.page || 0);
 		options.limit = +(options.limit || 20);
 		options.skip = options.page * options.limit || 0;
@@ -20,6 +25,15 @@ export class MongoService {
 			this.model.countDocuments(sql),
 			this.model.find(sql, options.filter, options)
 		]).then(([total, list]) => {
+			const endTIme = new Date().getTime();
+			this.kafka.log({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
+				type: 'find',
+				sql,
+				options
+			});
 			return {
 				list: list,
 				pages: {
@@ -29,7 +43,11 @@ export class MongoService {
 				}
 			};
 		}).catch(error => {
+			const endTIme = new Date().getTime();
 			this.kafka.error({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
 				type: 'find',
 				sql,
 				options,
@@ -40,10 +58,24 @@ export class MongoService {
 	}
 
 	async findOne(sql: any, options: any = {}): Promise<any> {
+		const startTime = new Date().getTime();
 		return await this.model.findOne(sql, options.filter, options).then((data) => {
+			const endTIme = new Date().getTime();
+			this.kafka.log({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
+				type: 'findOne',
+				sql,
+				options
+			});
 			return data;
 		}).catch(error => {
+			const endTIme = new Date().getTime();
 			this.kafka.error({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
 				type: 'findOne',
 				sql,
 				options,
@@ -54,10 +86,23 @@ export class MongoService {
 	}
 
 	async insertMany(sql: any): Promise<any> {
+		const startTime = new Date().getTime();
 		return await this.model.insertMany(sql).then((data) => {
+			const endTIme = new Date().getTime();
+			this.kafka.log({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
+				type: 'insertMany',
+				sql,
+			});
 			return data;
 		}).catch(error => {
+			const endTIme = new Date().getTime();
 			this.kafka.error({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
 				type: 'insertMany',
 				sql,
 				error
@@ -67,10 +112,23 @@ export class MongoService {
 	}
 
 	async insert(sql: any): Promise<any> {
+		const startTime = new Date().getTime();
 		return await this.model.insertMany(sql).then((data) => {
+			const endTIme = new Date().getTime();
+			this.kafka.log({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
+				type: 'insert',
+				sql,
+			});
 			return data[0];
 		}).catch(error => {
+			const endTIme = new Date().getTime();
 			this.kafka.error({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
 				type: 'insert',
 				sql,
 				error
@@ -80,15 +138,30 @@ export class MongoService {
 	}
 
 	async update(sql: any, newDate: any, params: any = {}): Promise<any> {
+		const startTime = new Date().getTime();
 		newDate.updateTime = +new Date();
 		if (params.upsert) {
 			params.setDefaultsOnInsert = true;
 		}
 
 		return await this.model.updateMany(sql, newDate, params).then((data) => {
+			const endTIme = new Date().getTime();
+			this.kafka.log({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
+				type: 'update',
+				sql,
+				newDate,
+				params
+			});
 			return data;
 		}).catch(error => {
+			const endTIme = new Date().getTime();
 			this.kafka.error({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
 				type: 'update',
 				sql,
 				newDate,
@@ -100,16 +173,31 @@ export class MongoService {
 	}
 
 	async updateOne(sql: any, newDate: any, params: any = {}): Promise<any> {
+		const startTime = new Date().getTime();
 		newDate.updateTime = +new Date();
 		if (params.upsert) {
 			params.setDefaultsOnInsert = true;
 		}
 
 		return await this.model.updateOne(sql, newDate, params).then((data) => {
+			const endTIme = new Date().getTime();
+			this.kafka.log({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
+				type: 'update',
+				sql,
+				newDate,
+				params
+			});
 			return data;
 		}).catch(error => {
+			const endTIme = new Date().getTime();
 			this.kafka.error({
-				type: 'updateOne',
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
+				type: 'update',
 				sql,
 				newDate,
 				params,
@@ -120,10 +208,23 @@ export class MongoService {
 	}
 
 	async remove(sql: any): Promise<any> {
+		const startTime = new Date().getTime();
 		return await this.model.deleteMany(sql).then((data) => {
+			const endTIme = new Date().getTime();
+			this.kafka.log({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
+				type: 'remove',
+				sql,
+			});
 			return data;
 		}).catch(error => {
-			this.kafka.error({
+			const endTIme = new Date().getTime();
+			this.kafka.log({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
 				type: 'remove',
 				sql,
 				error
@@ -133,10 +234,23 @@ export class MongoService {
 	}
 
 	async removeOne(sql: any): Promise<any> {
+		const startTime = new Date().getTime();
 		return await this.model.deleteOne(sql).then((data) => {
+			const endTIme = new Date().getTime();
+			this.kafka.log({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
+				type: 'removeOne',
+				sql,
+			});
 			return data;
 		}).catch(error => {
-			this.kafka.error({
+			const endTIme = new Date().getTime();
+			this.kafka.log({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
 				type: 'removeOne',
 				sql,
 				error
@@ -146,10 +260,23 @@ export class MongoService {
 	}
 
 	async aggregate(sql: any): Promise<any> {
+		const startTime = new Date().getTime();
 		return await this.model.aggregate(sql).then((data) => {
+			const endTIme = new Date().getTime();
+			this.kafka.log({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
+				type: 'aggregate',
+				sql,
+			});
 			return data;
 		}).catch(error => {
+			const endTIme = new Date().getTime();
 			this.kafka.error({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
 				type: 'aggregate',
 				sql,
 				error
@@ -159,10 +286,22 @@ export class MongoService {
 	}
 
 	async drop(): Promise<any> {
+		const startTime = new Date().getTime();
 		return await this.model.collection.drop().then((data) => {
+			const endTIme = new Date().getTime();
+			this.kafka.log({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
+				type: 'drop',
+			});
 			return data;
 		}).catch(error => {
-			this.kafka.error({
+			const endTIme = new Date().getTime();
+			this.kafka.log({
+				useTime: endTIme - startTime,
+				databaseName: this.databaseName,
+				collectionName: this.collectionName,
 				type: 'drop',
 				error
 			});

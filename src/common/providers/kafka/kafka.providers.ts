@@ -1,11 +1,14 @@
 import * as Kafka from 'kafka-node';
+import { ConfigService } from '../config/config.service';
 const Producer = Kafka.Producer;
 
 export const KafkaConnectionProviders = {
 	provide: 'KAFKA_CONNECTION',
-	useFactory: (): any => {
-		const client = new Kafka.KafkaClient({ kafkaHost: 'kafka1.bigdata.zuzuche.info:9092,kafka2.bigdata.zuzuche.info:9092,kafka3.bigdata.zuzuche.info:9092' });
+	useFactory: (config: ConfigService): any => {
+		const kafkaConfig = config.get('kafka') || {};
+		const client = new Kafka.KafkaClient({ kafkaHost: kafkaConfig.host });
 		const producer = new Producer(client);
 		return producer;
 	},
+	inject: [ConfigService]
 };
