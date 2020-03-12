@@ -16,5 +16,4 @@ export class IndexController {
 	async index() {
 		return this.indexService.getName();
 	}
-
 }
