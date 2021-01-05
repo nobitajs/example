@@ -1,12 +1,10 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, Inject } from '@nestjs/common';
-import { KafkaService } from '../providers/kafka/kafka.service';
 import { ConfigService } from '../providers/config/config.service';
 import { RejectExceptionsFilter } from './reject.exception';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
 	constructor(
-		@Inject(KafkaService) private readonly kafka: KafkaService,
 		@Inject(ConfigService) private readonly config: ConfigService
 	) {
 
@@ -62,7 +60,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 			}
 
 		};
-		status != 404 && this.kafka.error(errorData);
+		status != 404 && console.error(errorData);
 		this.response
 			.status(status)
 			.json(debug ? errorData : {
