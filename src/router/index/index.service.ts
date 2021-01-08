@@ -1,91 +1,67 @@
-import * as puppeteer from 'puppeteer';
-import { Injectable, Inject } from '@nestjs/common';
-import * as moment from 'moment';
+import axios from 'axios';
+import * as qs from 'qs';
+import * as crypto from 'crypto';
+import { Injectable, Inject, HttpService } from '@nestjs/common';
 import { CacheService } from '../../common/providers/cache/cache.service';
-import { WechatService } from '../../common/providers/wechat/wechat.service';
-import { IndexAddUserDataDto } from './index.dto';
+import { HelperService } from '../../common/providers/helper/helper.service';
+import { IndexDataDto } from './index.dto';
+
+let time = 200;
 @Injectable()
 export class IndexService {
 
 	constructor(
-		private readonly wechatService: WechatService,
 		private readonly cacheService: CacheService,
+		private readonly http: HttpService,
+		private readonly helper: HelperService,
+		
 	) {
 
 	}
-
-	async checkWorkAttendance(user: string, pwd: string){
-		const url = 'https://gzehr.zuzuche.cn/Attendance/StaffDaily/Edit?ParameterID=W03030200&ParameterTitle=%E8%80%83%E5%8B%A4%E6%9F%A5%E8%AF%A2';
-		const browser = await puppeteer.launch({headless: false});
-		const page = await browser.newPage();
-		await page.setExtraHTTPHeaders({
-            'authorization': 'Basic ' + Buffer.from(`zuzuche.com:tantu.com`).toString('base64'),
-		})
+	async getSizeId(data: IndexDataDto){
+		let i = 0;
+		let n = 0;
 		
-		await page.goto(url);
-		await page.type('#UserName', user);
-      	await page.type('#Password', pwd);
-		await page.click('#dengluBtn');
-		
-		return Promise.race([
-			new Promise((reslove) => {
-				page.waitForSelector('.field-validation-error').then(async (e) => {
-					await this.removeUser(user);
-					reslove(1);
-				})
-			}),
-			new Promise((reslove) => {
-				page.on('response', async (e) => {
-					if(e.url().indexOf('gzehr.zuzuche.cn/Attendance/StaffDaily/GetStaffDailyList') !== -1){
-						const res = await e.json();
-						let text = res.Data.BackValues.slice(-3).map((item) => {
-							if(item.TranslateStatus){
-								return `#${item.DateFormat} ${item.TranslateStatus} 上班打卡时间:${this.normalizeDate(item.DetailsResult[0].Range.Start.DateTime)} 下班打卡时间:${this.normalizeDate(item.DetailsResult[0].Range.End.DateTime)}`;
-							}
-						}).filter(e => e);
-						if(text.length > 0){
-							console.log(user, text.join('\n'))
-							// this.wechatService.send({
-							// 	users: user,
-							// 	title: '考勤异常通知',
-							// 	content: text.join('\n'),
-							// 	url
-							// });
-						}
-						reslove(2);
-					}
-				})
+		while(true){
+			axios({
+				url: 'https://www.huahaicang.cn/api/neptune/neptune/cart/add/v2',
+				method: 'post',
+				data: qs.stringify({
+					sizeNum: '1',
+					source: 'huahaicang_iphone',
+					sizeId: data.sizeId[i],
+					method: 'POST',
+					timestamp: (+new Date() / 1000).toFixed(),
+					// marsCid: '1609900371316_2016e3181ff0ca1a428ed470f9ca72d9',
+					// appVersion: '6.7.8',
+					// version: '6.7.8',
+					// 'hhc-param': 'bda37924cee6014e70dfb46a79905931a63692cf',
+					// deviveryAreaId: '944101103999',
+					// deliveryAreaId: '944101103999',
+					// nonce: crypto.createHash('md5').update(Math.random().toString()).digest("hex"),
+					// sign: crypto.createHash('md5').update(Math.random().toString()).digest("hex")
+				}),
+				headers: {
+					'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
+					'Content-Type': 'application/x-www-form-urlencoded',
+					referer: 'https://www.huahaicang.cn/',
+					cookie: data.cookie,
+				}
+			}).then(res => {
+				console.log(res.data.msg, res.data.code)
 			})
-		]).then(async (e) =>{
-			browser.close();
-		})
-	}
-
-
-	normalizeDate(dateStr: string) {
-		if(!dateStr) return "--";
-		const dateIntValue = parseInt(dateStr.replace("/Date(", "").replace(")/", ""), 10);
-		let localOffset = new Date(dateIntValue).getTimezoneOffset();
-		//getTimezoneOffset()返回分钟格式的时区偏移
-		localOffset = localOffset * 60000;//转换为毫秒
-		const utc = dateIntValue + localOffset;
-		const beijing = utc + 28800000;
-		return moment(beijing).format('HH:mm:ss');
-	}
-
-	async addUser(data: IndexAddUserDataDto){
-		const users = await this.cacheService.get('users') || {};
-		Object.assign(users, {
-			[data.user]: {
-				pwd: data.pwd
+			i++; n++;
+			if(n >= 16){
+				await this.helper.sleep(2300)
+				n = 0;
+			}else{
+				await this.helper.sleep(180)
 			}
-		})
-		return await this.cacheService.set('users', users);
-	}
-
-	async removeUser(id: string){
-		const users = await this.cacheService.get('users') || {};
-		delete users[id];
-		return await this.cacheService.set('users', users);
+			
+			if(i == data.sizeId.length){
+				i = 0;
+			}
+		}
+		return ''
 	}
 }
