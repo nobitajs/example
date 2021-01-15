@@ -10,7 +10,7 @@
   },
   "scripts": {
     "local": "ns local ./app.js",
-    "prod": "ns start ./app.js -i 1 -n demo --detached",
+    "prod": "ns start ./app.js -i 1 -n demo",
     "stop": "ns stop demo",
     "debug": "ns local ./app.js --inspect"
   },
