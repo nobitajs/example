@@ -1,8 +1,8 @@
 import { isEmpty } from 'lodash';
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query } from '@nestjs/common';
 import { IndexService } from './index.service';
 import { CacheService } from '../../common/providers/cache/cache.service';
-import { IndexDataDto } from './index.dto';
+import { IndexDataDto, IndexGetSizeIdDataDto } from './index.dto';
 
 @Controller('/')
 export class IndexController {
@@ -12,11 +12,12 @@ export class IndexController {
 	) { }
 
 	@Post()
-	async getSizeId(@Body() data: IndexDataDto) {
-		return this.indexService.getSizeId(data);
+	async buy(@Body() data: IndexDataDto) {
+		return this.indexService.buy(data);
 	}
 
-	@Post('/addUser')
-	async set(){
+	@Get('/getSizeId')
+	async getSizeId(@Query() data: IndexGetSizeIdDataDto){
+		return await this.indexService.getSizeId(data);
 	}
 }

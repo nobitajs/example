@@ -4,7 +4,8 @@ import * as crypto from 'crypto';
 import { Injectable, Inject, HttpService } from '@nestjs/common';
 import { CacheService } from '../../common/providers/cache/cache.service';
 import { HelperService } from '../../common/providers/helper/helper.service';
-import { IndexDataDto } from './index.dto';
+
+import { IndexDataDto, IndexGetSizeIdDataDto } from './index.dto';
 
 let time = 200;
 @Injectable()
@@ -18,7 +19,7 @@ export class IndexService {
 	) {
 
 	}
-	async getSizeId(data: IndexDataDto){
+	async buy(data: IndexDataDto){
 		let i = 0;
 		let n = 0;
 		
@@ -63,5 +64,26 @@ export class IndexService {
 			}
 		}
 		return ''
+	}
+
+	getSizeId(data: IndexGetSizeIdDataDto){
+		return axios({
+			url: 'https://www.huahaicang.cn/api/neptune/goods/detail_with_logo',
+			method: 'post',
+			data: qs.stringify({
+				gid: data.gid,
+				clientType: 'wap',
+				method: 'GET',
+			}),
+			headers: {
+				'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
+				'Content-Type': 'application/x-www-form-urlencoded',
+				referer: 'https://www.huahaicang.cn/',
+			}
+		}).then(res => {
+			return res.data.data.goodsStock.sizes.map((item) => {
+				return `${item.name} : ${item.sizeId}`
+			})
+		})
 	}
 }
