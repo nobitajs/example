@@ -1,5 +1,5 @@
 const axios = require('axios');
-const download = require('download');
+
 const u = require('../../u');
 
 const urls = [
@@ -90,24 +90,24 @@ module.exports = (app) => {
 
     async other() {
       const { ctx } = this;
-      let i = 8001;
-      while(i <= 8002){
+      let i = 1;
+      while(i <= 180){
         let j = 1;
-        const url = `https://twocomic.com/view/comic_7340.html?ch=${i}-${j}`;
+        const url = `https://twocomic.com/view/comic_14898.html?ch=${i}-${j}`;
         const {page} = u(j, url);
         const p = [];
-        console.log('共',page, '页')
+        const arr = [];
         while(j <= page){
-          const url = `https://twocomic.com/view/comic_7340.html?ch=${i}-${j}`;
+          const url = `https://twocomic.com/view/comic_14898.html?ch=${i}-${j}`;
           const {img} = u(j, url);
-          let page = j;
-          p.push(download(img, `../进击的巨人/第${i}话`, {
-            filename: `${j}.jpg`.toString()
-          }).then(() => {console.log(`进击的巨人/第${i}话-第${page}页`, '下载完成')}).catch(e=>{}))
+          arr.push({
+            url: img,
+            path: `../石纪元/第${i}话/`,
+            page: j
+          })
           j++;
         }
-
-        await Promise.all(p).then()
+        await ctx.service.main.download(arr, i, page, 20)
         i++;
       }
       
