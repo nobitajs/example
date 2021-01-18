@@ -20,7 +20,6 @@ for (const key in AllSchema) {
 			required: true
 		}
 	});
-
 	provides.push({
 		provide: key.toLocaleUpperCase(),
 		useFactory: (connection: mongoose.createConnection, kafka: KafkaService) => {

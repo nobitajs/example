@@ -8,13 +8,9 @@ const config = {
 	},
 
 	mongo: {
-		url: 'mongodb://127.0.0.1:27017/app_push',
+		url: 'mongodb://127.0.0.1:27017/manhua',
 	},
 
-	push: {
-		key: 'admin',
-		secret: 'bnUPx6OyMBVcdca7l9U6uoNJnIX2QgPm',
-	},
 	appushHost: 'https://appush.zuzuche.net',
 
 };
