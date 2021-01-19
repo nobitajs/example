@@ -6,36 +6,34 @@ const fs = require('fs');
 
 module.exports = (app) => {
   return {
-    async download(arr, i, total, max) {
-      const bar = new ProgressBar(`第${i}话(共${total}页): [:bar] [:percent]`, { total: +total, width: 50, clear: true });
+    async download(arr, title, total, max) {
       const { ctx } = this;
+      const bar = new ProgressBar(`${title}(共${total}页): [:bar] [:percent]`, { total: +total, width: 50, clear: true });
       const newArr = chunk(arr, max)
       for(const list of newArr){
         const p = list.map(({url, path, page}) => {
-          let ws = fs.createWriteStream(`${path}${page}.jpg`);
-          return new Promise((reslove) => {
-            axios({
+          url = url.indexOf('http') === -1 ? `http:${url}` : url;
+          return  axios({
               url,
               method: 'get',
-              responseType: "stream",
+              responseType: "arraybuffer",
+              headers: {
+                'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36',
+                'cache-control': 'no-cache',
+                accept: 'image/webp,image/apng,image/*,*/*;q=0.8'
+              }
             }).then(res => {
               if(!fs.existsSync(path)){
                 fs.mkdirSync(path)
               }
-              res.data.pipe(ws);
-              ws.on("finish", () => {
-                reslove()
-                bar.tick(1);  //进度步长
-              })
-
-              ws.on('error', (err) => {
-                console.log(err.stack);
-             });
+              fs.writeFileSync(`${path}${page}.jpg`, res.data, 'binary')
+              bar.tick(1);  //进度步长
+         
+            }).catch(e => {
+              console.log(e.message)
             })
           })
-        })
-  
-        await Promise.all(p).then() 
+        await Promise.all(p)
       }
       
     }
