@@ -2,6 +2,41 @@ const axios = require('axios');
 
 const u = require('../../u');
 
+
+axios.defaults.retry = 4;
+axios.defaults.retryDelay = 1000;
+ 
+//在API文件中
+axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
+    var config = err.config;
+    // If config does not exist or the retry option is not set, reject
+    if(!config || !config.retry) return Promise.reject(err);
+    
+    // Set the variable for keeping track of the retry count
+    config.__retryCount = config.__retryCount || 0;
+    
+    // Check if we've maxed out the total number of retries
+    if(config.__retryCount >= config.retry) {
+        // Reject with the error
+        return Promise.reject(err);
+    }
+    
+    // Increase the retry count
+    config.__retryCount += 1;
+    
+    // Create new promise to handle exponential backoff
+    var backoff = new Promise(function(resolve) {
+        setTimeout(function() {
+            resolve();
+        }, config.retryDelay || 1);
+    });
+    
+    // Return the promise in which recalls axios to retry the request
+    return backoff.then(function() {
+        return axios(config);
+    });
+});
+
 const urls = {
   "158471": "第181話",
 "156660": "第180話",
@@ -145,7 +180,6 @@ const urls = {
 "109035": "第42話",
 "109034": "第41話",
 "109033": "第40話",
-"107914": "第39話",
 "109032": "第38話",
 "109031": "第37話",
 "109030": "第36話",
@@ -254,35 +288,42 @@ module.exports = (app) => {
       const { ctx } = this;
       for(const id in urls){
         let status = true;
-        let page = 0;
+        let page = 1;
         let arr = [];
         let title = urls[id]
 
         while(status){
-          const host = `http://mangabz.com/m${id}/chapterimage.ashx?cid=${id}&page=${page}`;
+          const host = `http://mangabz.com/m${id}/chapterimage.ashx?cid=${id}&page=${page}&v=${+new Date()}`;
           const res = await axios({
             url: host,
             method: 'get',
+            timeout: 1000,
             headers: {
               Referer: `http://mangabz.com/m${id}/`,
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36'
+              Host: 'mangabz.com',
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36',
+              Cookie: '__cfduid=de9e969b83d64cb124211ec73809a03721610724095; frombot=1; MANGABZ_MACHINEKEY=dcda9e04-bb9f-4341-9f99-4dee176e279f; UM_distinctid=1771968bde5aa6-08ea454eac69be-31346d-1aeaa0-1771968bde67ec; CNZZDATA1278095942=1866747683-1611037033-%7C1611037033; CNZZDATA1278515277=570053534-1611035909-%7C1611035909; mangabzcookieenabletest=1; CNZZDATA1278095929=450954999-1611033749-%7C1611039149; mangabzimgcooke=158471%7C18; ComicHistoryitem_zh=History=265,637466651170735519,158471,3,0,0,0,184&ViewType=0; readhistory_time=1-265-158471-3; image_time_cookie=158471|637466651170825604|3; mangabzimgpage=158471|3:1; firsturl=http%3A%2F%2Fmangabz.com%2Fm158471%2F'
             }
-          })
-
+          }).catch(e => {console.log(e)})
+          console.log(host)
           const imgs = eval(res.data)
           const total = imgs.length;
-          page += 1;
-          arr.push({
-            url: imgs[0],
-            path: `../石纪元/${title}/`,
-            page
-          })
-          if(total === 1){
+          const max = imgs[total - 1].match(/(\w+)_\w+.jpg/)[1];
+          if(page > max){
             break;
           }
+
+          arr.push(...imgs.map((url) => {
+            return {
+              url,
+              path: `../石纪元/${title}/`,
+              page: page++
+            }
+          }))
         }
+
         console.log(arr)
-        await ctx.service.main.download(arr, title, page, 10)
+        await ctx.service.main.download(arr, title, page - 1, 10)
       }
       ctx.body = '完成'
     },
