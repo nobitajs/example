@@ -1,0 +1,39 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta name="referrer" content="always">
+    <meta name="applicable-device" content="pc">
+    <title>链接转换</title>
+    <style type="text/css">
+.textarea{
+	width: 500px;
+	height: 300px;
+}
+    </style>
+</head>
+<body>
+	<div>
+		<textarea class='textarea' id='t1'></textarea>
+	</div>
+	<div>
+		<textarea class='textarea' id='t2'></textarea>
+	</div>
+
+	<script type="text/javascript">
+	(function(){
+		var t1 = document.getElementById('t1');
+		var t2 = document.getElementById('t2');
+
+		t2.addEventListener('change', function(e){
+			console.log(e)
+		})
+	})()
+	</script>
+</body>
+  </html>
