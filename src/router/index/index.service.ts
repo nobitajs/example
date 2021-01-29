@@ -7,7 +7,9 @@ import { HelperService } from '../../common/providers/helper/helper.service';
 
 import { IndexDataDto, IndexGetSizeIdDataDto } from './index.dto';
 
-let time = 200;
+let time = 0;
+let sizeId = ['1624530605796383', '1624530605800479', '1624529739277342', '1624529739281438' ]
+// let sizeId = ['1617219403782153', '1482044468991493', '1596649056887821', '1627099494265932', '1627105556379541', '1627105555658645', '1627099494552652']
 @Injectable()
 export class IndexService {
 
@@ -21,47 +23,59 @@ export class IndexService {
 	}
 	async buy(data: IndexDataDto){
 		let i = 0;
+		let max = 2;
 		let n = 0;
-		
 		while(true){
-			axios({
-				url: 'https://www.huahaicang.cn/api/neptune/neptune/cart/add/v2',
-				method: 'post',
-				data: qs.stringify({
-					sizeNum: '1',
-					source: 'huahaicang_iphone',
-					sizeId: data.sizeId[i],
-					method: 'POST',
-					timestamp: (+new Date() / 1000).toFixed(),
-					// marsCid: '1609900371316_2016e3181ff0ca1a428ed470f9ca72d9',
-					// appVersion: '6.7.8',
-					// version: '6.7.8',
-					// 'hhc-param': 'bda37924cee6014e70dfb46a79905931a63692cf',
-					// deviveryAreaId: '944101103999',
-					// deliveryAreaId: '944101103999',
-					// nonce: crypto.createHash('md5').update(Math.random().toString()).digest("hex"),
-					// sign: crypto.createHash('md5').update(Math.random().toString()).digest("hex")
-				}),
-				headers: {
-					'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
-					'Content-Type': 'application/x-www-form-urlencoded',
-					referer: 'https://www.huahaicang.cn/',
-					cookie: data.cookie,
+			let p = [];
+			while(p.length < max){
+				if(i >= sizeId.length){
+					i = 0;
 				}
-			}).then(res => {
-				console.log(res.data.msg, res.data.code)
-			})
-			i++; n++;
-			if(n >= 16){
-				await this.helper.sleep(2300)
-				n = 0;
+				p.push(axios({
+					url: 'https://www.huahaicang.cn/api/neptune/neptune/cart/add/v2',
+					method: 'post',
+					data: qs.stringify({
+						sizeNum: '1',
+						source: 'huahaicang_iphone',
+						sizeId: sizeId[i],
+						method: 'POST',
+						timestamp: (+new Date() / 1000 - i).toFixed(),
+						// marsCid: '1609900371316_2016e3181ff0ca1a428ed470f9ca72d9',
+						// appVersion: '6.7.8',
+						// version: '6.7.8',
+						// 'hhc-param': 'bda37924cee6014e70dfb46a79905931a63692cf',
+						// deviveryAreaId: '944101103999',
+						// deliveryAreaId: '944101103999',
+						// nonce: crypto.createHash('md5').update(Math.random().toString()).digest("hex"),
+						// sign: crypto.createHash('md5').update(Math.random().toString()).digest("hex")
+					}),
+					headers: {
+						'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
+						'Content-Type': 'application/x-www-form-urlencoded',
+						referer: 'https://www.huahaicang.cn/',
+						cookie: 'hhc-param=bda37924cee6014e70dfb46a79905931a63692cf; mars_cid=1609900371316_2016e3181ff0ca1a428ed470f9ca72d9; areaId=944101103999; WAP[p_wh]=VIP_NH; warehouse=VIP_NH; m_vip_province=104104101103; WAP[p_area]=%25E5%25B9%25BF%25E4%25B8%259C%25E7%259C%2581.%25E5%25B9%25BF%25E5%25B7%259E%25E5%25B8%2582.%25E8%258D%2594%25E6%25B9%25BE%25E5%258C%25BA; saturn=vst4301l4j38tjhbg8ksnp9ql10; triton=CCC8C0CE745C8596F8AEAE63C732638C6F2E249C; _t_offset=0; _t_=1611884212',
+					}
+				}));
+				i++;
+			}
+			n += max;
+			if(n % 16 === 0){
+				time = 2100;
 			}else{
-				await this.helper.sleep(180)
+				time = 0
 			}
+			console.log(time)
+			await new Promise((aa) =>{
+				setTimeout(()=>{
+					aa({});
+				},time)
+			})
+			const res = await Promise.all(p)
+			res.forEach(data=>{
+				console.log(data.data.msg);
 			
-			if(i == data.sizeId.length){
-				i = 0;
-			}
+			})
+			
 		}
 		return ''
 	}

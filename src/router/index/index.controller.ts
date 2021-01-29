@@ -11,7 +11,7 @@ export class IndexController {
 		private readonly cacheService: CacheService,
 	) { }
 
-	@Post()
+	@Get()
 	async buy(@Body() data: IndexDataDto) {
 		return this.indexService.buy(data);
 	}
