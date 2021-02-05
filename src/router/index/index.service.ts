@@ -8,7 +8,7 @@ import { HelperService } from '../../common/providers/helper/helper.service';
 import { IndexDataDto, IndexGetSizeIdDataDto } from './index.dto';
 
 let time = 0;
-let sizeId = ['1624530605796383', '1624530605800479', '1624529739277342', '1624529739281438' ]
+let sizeId = ['1635824717765598' ]
 // let sizeId = ['1617219403782153', '1482044468991493', '1596649056887821', '1627099494265932', '1627105556379541', '1627105555658645', '1627099494552652']
 @Injectable()
 export class IndexService {
