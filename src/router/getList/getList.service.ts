@@ -1,5 +1,4 @@
 import { Injectable, Inject } from '@nestjs/common';
-
 @Injectable()
 export class GetListService {
 
@@ -8,10 +7,4 @@ export class GetListService {
 
 	}
 
-	getName(){
-		return { 
-			code: 200,
-			msg: 'NestJs'
-		}
-	}
 }

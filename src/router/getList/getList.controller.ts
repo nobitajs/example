@@ -1,8 +1,10 @@
+import * as puppeteer from 'puppeteer'
+import axios from 'axios';
 import { Controller, Get, Inject } from '@nestjs/common';
 import { MongoService } from '../../common/providers/mongodb/mongodb.service';
 import { GetListService } from './getList.service';
 import { KafkaService } from '../../common/providers/kafka/kafka.service';
-import * as puppeteer from 'puppeteer'
+
 
 @Controller('/getList')
 export class GetListController {
@@ -18,29 +20,44 @@ export class GetListController {
 		const browser = await puppeteer.launch({
 			headless: false, 
 			defaultViewport: {
+				devtools: true,
 				isMobile: true, 
 				width: 375, 
 				height: 812
 			}
 		})
+		let first = true;
 		// 先打开首页注入cookie
 		const page1 = await browser.newPage();
 		await page1.goto('https://m.ctrip.com/html5/carhire');
 
 		// 再打开列表页
 		const page2 = await browser.newPage();
-		await page2.goto('https://m.ctrip.com/webapp/cw/rn_car_app/Market.html?CRNType=1&fromurl=common&landingto=List&apptype=ISD_C_CW&filters=false&st=ser&CRNModuleName=rn_car_app&pcid=43&plat=18.303421053756&plng=109.41463173357&ptime=20210316100000&rtime=20210419100000&rcid=43&rlat=18.303421053756&rlng=109.41463173357&ouid=');
-		// await page2._client.send('Network.enable', {
-		// 	maxResourceBufferSize: 1024 * 1204 * 100,
-		// 	maxTotalBufferSize: 1024 * 1204 * 1000,
-		// })
-		page2.on('response', async response => {
-			const url = response.url();
-			if(url.indexOf('https://m.ctrip.com/restapi/soa2/13191/getAccountInfoByTicket.json') !== -1){
-					console.log(await response.text())
+		page2.goto('https://m.ctrip.com/webapp/cw/rn_car_app/Market.html?CRNType=1&fromurl=common&landingto=List&apptype=ISD_C_CW&filters=false&st=ser&CRNModuleName=rn_car_app&pcid=43&plat=18.303421053756&plng=109.41463173357&ptime=20210316100000&rtime=20210419100000&rcid=43&rlat=18.303421053756&rlng=109.41463173357&ouid=');
+		page2.setRequestInterception(true);
+
+		page2.on('request', async request => {
+			const url = request.url();
+			if(url.indexOf('https://m.ctrip.com/restapi/soa2/18631/queryProducts') !== -1){
 				
+				request.abort();
+				if(first){
+					first = false;
+					const params = {
+						url: request.url(),
+						method: request.method(),
+						data: request.postData(),
+						headers: request.headers()
+					}
+					const res = await axios(params)
+					console.log(res.data, '====list====');
+				}
+				
+			}else{
+				request.continue();
 			}
 		})
-		return this.getListService.getName();
+
+		return {};
 	}
 }
