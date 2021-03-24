@@ -1,6 +1,6 @@
 import * as puppeteer from 'puppeteer'
 import axios from 'axios';
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Get, Inject, Query } from '@nestjs/common';
 import { GetListService } from './getList.service';
 import { MongoService } from '../../common/providers/mongodb/mongodb.service';
 import { KafkaService } from '../../common/providers/kafka/kafka.service';
@@ -15,8 +15,9 @@ export class GetListController {
 	) { }
 
 	@Get()
-	async getList() {
+	async getList(@Query() data) {
 		// console.log(await this.ctrip_zuche_area_tbl.find({atype: '百子湾'}))
+		console.log(data, '====')
 		// const browser = await puppeteer.launch({
 		// 	headless: false, 
 		// 	defaultViewport: {
