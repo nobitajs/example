@@ -6,7 +6,6 @@ import { KafkaService } from '../kafka/kafka.service';
 import * as merge from 'lodash/merge';
 
 const provides = [];
-
 for (const key in AllSchema) {
 	Object.assign(AllSchema[key], {
 		createTime: {
@@ -20,11 +19,9 @@ for (const key in AllSchema) {
 			required: true
 		}
 	});
-
 	provides.push({
 		provide: key.toLocaleUpperCase(),
 		useFactory: (connection: mongoose.createConnection, kafka: KafkaService) => {
-			console.log();
 			return new MongoService(connection.name, key, connection.model(key, new mongoose.Schema(AllSchema[key]), key), kafka);
 		},
 		inject: ['MONGODB_CONNECTION', KafkaService],
