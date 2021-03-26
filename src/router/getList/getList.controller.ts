@@ -73,7 +73,7 @@ export class GetListController {
 		const p = new Promise(async (s) => {
 			for(let item of city){
 				const { id, defaultArea, name, provinceName } = item;
-				const res = await this.getListService.getCarListParams({pcid: id, rcid: id, plat: defaultArea.lat, plng: defaultArea.lon, rlat: defaultArea.lat, rlng: defaultArea.lon, ptime: '20210326130000', rtime: '20210328130000'});
+				const res = await this.getListService.getCarListParams({pcid: id, rcid: id, plat: '', plng: '', rlat: '', rlng: '', ptime: '20210326130000', rtime: '20210328130000'});
 				if(res?.data?.productGroups && res.data.productGroups.length > 0){
 					const arr = res.data.vendorList.map(item => item.vendorName);
 					const text = arr.join('\n');
