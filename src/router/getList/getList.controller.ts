@@ -1,63 +1,89 @@
-import * as puppeteer from 'puppeteer'
-import axios from 'axios';
-import { Controller, Get, Inject, Query } from '@nestjs/common';
-import { GetListService } from './getList.service';
-import { MongoService } from '../../common/providers/mongodb/mongodb.service';
-import { KafkaService } from '../../common/providers/kafka/kafka.service';
 
+import { Controller, Get, Inject, Query, UsePipes } from '@nestjs/common';
+import { GetListService } from './getList.service';
+import { KafkaService } from '../../common/providers/kafka/kafka.service';
+import { GetListJoiValidationPipe } from './getList.pipe';
+import { GetListDataDto } from './getList.dto';
+import city from '../../../city';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Controller('/getList')
 export class GetListController {
 	constructor(
 		private readonly getListService: GetListService,
 		private readonly kafka: KafkaService,
-		@Inject('CTRIP_ZUCHE_AREA_TBL') private readonly ctrip_zuche_area_tbl: MongoService
 	) { }
 
 	@Get()
-	async getList(@Query() data) {
-		// console.log(await this.ctrip_zuche_area_tbl.find({atype: '百子湾'}))
-		console.log(data, '====')
-		// const browser = await puppeteer.launch({
-		// 	headless: false, 
-		// 	defaultViewport: {
-		// 		devtools: true,
-		// 		isMobile: true, 
-		// 		width: 375, 
-		// 		height: 812
-		// 	}
-		// })
-		// let first = true;
-		// // 先打开首页注入cookie
-		// const page1 = await browser.newPage();
-		// await page1.goto('https://m.ctrip.com/html5/carhire');
-
-		// // 再打开列表页
-		// const page2 = await browser.newPage();
-		// page2.goto('https://m.ctrip.com/webapp/cw/rn_car_app/Market.html?CRNType=1&fromurl=common&landingto=List&apptype=ISD_C_CW&filters=false&st=ser&CRNModuleName=rn_car_app&pcid=43&plat=18.303421053756&plng=109.41463173357&ptime=20210316100000&rtime=20210419100000&rcid=43&rlat=18.303421053756&rlng=109.41463173357&ouid=');
-		// page2.setRequestInterception(true);
-
-		// page2.on('request', async request => {
-		// 	const url = request.url();
-		// 	if(url.indexOf('https://m.ctrip.com/restapi/soa2/18631/queryProducts') !== -1){
-				
-		// 		request.abort();
-		// 		if(first){
-		// 			first = false;
-		// 			const params = {
-		// 				url: request.url(),
-		// 				method: request.method(),
-		// 				data: request.postData(),
-		// 				headers: request.headers()
+	// @UsePipes(new GetListJoiValidationPipe())
+	async getList(@Query() data: GetListDataDto) {
+		// const { pname, rname, plat, plng, rlat, rlng, ptime, rtime } = data;
+		// let carList = [];
+		
+		// const [pcid, rcid] = await Promise.all([
+		// 	this.getListService.getCityId(pname),
+		// 	this.getListService.getCityId(rname)
+		// ]);
+		// const params = await this.getListService.getCarListParams({pcid, rcid, plat, plng, rlat, rlng, ptime, rtime});
+		// const res = await this.getListService.sendGetCarListToCtrip(params);
+		// if(res?.data?.productGroups && res.data.productGroups.length > 0){
+		// 	for(let productGroups of res.data.productGroups){
+		// 		for(let productList of productGroups.productList){
+		// 			const {vehicleCode} = productList;
+		// 			let newCarInfo = {
+		// 				brandName: null,
+		// 				name: null,
+		// 				doorNo: null,
+		// 				passengerNo: null,
+		// 				transmissionName: null,
+		// 				vehicleCode: null,
+		// 				vendorPriceList: []
+		// 			};
+		// 			for(let carInfo of res.data.vehicleList){
+		// 				if(carInfo.vehicleCode === vehicleCode){
+		// 					newCarInfo.name = carInfo.name;
+		// 					newCarInfo.brandName = carInfo.brandName;
+		// 					newCarInfo.doorNo = carInfo.doorNo;
+		// 					newCarInfo.passengerNo = carInfo.passengerNo;
+		// 					newCarInfo.transmissionName = carInfo.transmissionName;
+		// 					newCarInfo.vehicleCode = vehicleCode;
+		// 					break;
+		// 				}
 		// 			}
-		// 			const res = await axios(params)
-		// 			console.log(res.data, '====list====');
+		// 			for(let vendorPriceList of productList.vendorPriceList){
+		// 				let newVendorPriceList = {
+		// 					vendorName: vendorPriceList.vendorName,
+		// 					currentDailyPrice: vendorPriceList.priceInfo.currentDailyPrice,
+		// 					currentTotalPrice: vendorPriceList.priceInfo.currentTotalPrice,
+		// 				}
+		// 				newCarInfo.vendorPriceList.push(newVendorPriceList)
+		// 			}
+		// 			carList.push(newCarInfo)
 		// 		}
-				
-		// 	}else{
-		// 		request.continue();
 		// 	}
-		// })
+		
+		// }
+
+		return city;
+	}
+
+	@Get('/getSupplier')
+	getSupplier(@Query() data: GetListDataDto) {
+		const p = new Promise(async (s) => {
+			for(let item of city){
+				const { id, defaultArea, name, provinceName } = item;
+				const res = await this.getListService.getCarListParams({pcid: id, rcid: id, plat: defaultArea.lat, plng: defaultArea.lon, rlat: defaultArea.lat, rlng: defaultArea.lon, ptime: '20210326130000', rtime: '20210328130000'});
+				if(res?.data?.productGroups && res.data.productGroups.length > 0){
+					const arr = res.data.vendorList.map(item => item.vendorName);
+					const text = arr.join('\n');
+					console.log(path.resolve(__dirname, `../../../../../ctrip/${name}-${provinceName}.txt`));
+					fs.writeFileSync(path.resolve(__dirname, `../../../../../ctrip/${name}-${provinceName}.txt`), text);
+				}
+			}
+			s({})
+		})
+		
 
 		return {};
 	}

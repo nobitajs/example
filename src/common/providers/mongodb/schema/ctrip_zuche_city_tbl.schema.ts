@@ -1,4 +1,4 @@
-export const ctrip_zuche_area_tbl = {
+export const ctrip_zuche_city_tbl = {
     cen: String,
     defaultarea: String,
     hot: String,

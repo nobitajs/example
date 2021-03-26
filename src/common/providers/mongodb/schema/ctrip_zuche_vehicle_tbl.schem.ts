@@ -1,4 +1,4 @@
-export const ctrip_zuche_area_tbl = {
+export const ctrip_zuche_vehicle_tbl = {
 	BrandID: String,
     BrandName: String,
     CarriageDesc: String,

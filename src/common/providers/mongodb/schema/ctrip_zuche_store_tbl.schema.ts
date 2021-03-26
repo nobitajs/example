@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 const Mixed = mongoose.Schema.Types.Mixed;
-export const ctrip_zuche_area_tbl = {
+export const ctrip_zuche_store_tbl = {
     address: String,
     dropoffOndoorCost: String,
     freeshuttle: String,
