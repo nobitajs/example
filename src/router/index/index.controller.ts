@@ -1,10 +1,10 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Headers, Query } from '@nestjs/common';
 import { MongoService } from '../../common/providers/mongodb/mongodb.service';
 import { IndexService } from './index.service';
 import { KafkaService } from '../../common/providers/kafka/kafka.service';
 
 
-@Controller('/')
+@Controller('/getList')
 export class IndexController {
 	constructor(
 		private readonly indexService: IndexService,
@@ -13,7 +13,8 @@ export class IndexController {
 	) { }
 
 	@Get()
-	async index() {
-		return this.indexService.getName();
+	async index(@Query() params) {
+		return this.indexService.getCarList(params);
 	}
+
 }

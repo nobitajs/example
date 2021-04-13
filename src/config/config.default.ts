@@ -10,7 +10,7 @@ const config = {
 	mongo: {
 		url: 'mongodb://127.0.0.1:27017/spiders',
 	},
-
-
+	
+	cacheTime: 10 * 60 * 1000, // 携程数据缓存10分钟
 };
 export default config;

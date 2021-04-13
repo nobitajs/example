@@ -1,11 +1,13 @@
 import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException } from '@nestjs/common';
 import * as Joi from '@hapi/joi';
-import { GetListDataDto } from './getList.dto';
+import { GrabDataDto } from './grab.dto';
 import { RejectExceptionsFilter } from '../../common/exception/reject.exception';
 
 const addDataPipe = Joi.object({
 	pname: Joi.string().empty().required(),
 	rname: Joi.string().empty().required(),
+	plname: Joi.string().empty().required(),
+	rlname: Joi.string().empty().required(),
 	plat: Joi.string().empty().required(),
 	plng: Joi.string().empty().required(),
 	rlat: Joi.string().empty().required(),
@@ -16,8 +18,8 @@ const addDataPipe = Joi.object({
 
 
 @Injectable()
-export class GetListJoiValidationPipe implements PipeTransform {
-	transform(data: GetListDataDto, metadata: ArgumentMetadata) {
+export class GrabJoiValidationPipe implements PipeTransform {
+	transform(data: GrabDataDto, metadata: ArgumentMetadata) {
 		const { error, value } = addDataPipe.validate(data, { allowUnknown: true });
 		if (error) {
 			throw new RejectExceptionsFilter(400, error.toString());

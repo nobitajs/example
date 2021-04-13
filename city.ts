@@ -1,2 +1,2 @@
-const city = []
+const city = [];
 export default city;
