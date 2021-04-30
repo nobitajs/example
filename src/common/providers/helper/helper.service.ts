@@ -26,7 +26,7 @@ export class HelperService {
 		}
 		
 		const browser = await puppeteer.launch({
-			headless: false, 
+			// headless: false, 
 			defaultViewport: {
 				hasTouch: true,
 				devtools: true,

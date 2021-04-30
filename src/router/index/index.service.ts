@@ -11,7 +11,8 @@ export class IndexService {
 	}
 
 	async getCarList(params: any = {}){
-		return this.cars_price_tbl.find({}, {
+		const query = params.id ? {_id: params.id || null} : {}
+		return this.cars_price_tbl.find(query, {
 			sort: {
 				queryTime: -1
 			},

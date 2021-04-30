@@ -5,8 +5,8 @@ export const cars_price_tbl = {
 		type: String,
 		index: true
 	},
-    ctripResult: Mixed,
-	zzcResult: Mixed,
+    // ctripResult: Mixed,
+	// zzcResult: Mixed,
     clid: String,
     pname: String,
 	rname: String,

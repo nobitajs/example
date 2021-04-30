@@ -45,8 +45,8 @@ export class MongoCarsCreateDataDto {
 export class MongoCarsUpdateDataDto {
 	readonly queryUrl: String;
 	readonly clid: String;
-	readonly ctripResult: Array<any>;
-	readonly zzcResult: Array<any>;
+	readonly ctripResult: any;
+	readonly zzcResult: any;
 	readonly status: String;
 }
 
@@ -65,5 +65,11 @@ export class VendorPriceList {
 	readonly vendorName: String;
 	readonly currentDailyPrice: Number;
 	readonly currentTotalPrice: Number;
+	
+}
+
+
+export class FormatDataDto {
+	readonly id: String;
 	
 }

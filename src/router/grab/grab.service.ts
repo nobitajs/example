@@ -7,6 +7,10 @@ import { ConfigService } from '../../common/providers/config/config.service';
 import { GetCarListParamsDto, GrabDataDto, MongoCarsCreateDataDto, MongoCarsUpdateDataDto } from './grab.dto';
 import * as crypto from 'crypto'
 
+
+const storeList = {
+	'鲲鹏租车': '悟空租车'
+}
 @Injectable()
 export class GrabService {
 
@@ -14,6 +18,9 @@ export class GrabService {
 		@Inject('ZZC_ZUCHE_CITY_TBL') private readonly zzc_zuche_city_tbl: MongoService,
 		@Inject('CTRIP_ZUCHE_CITY_TBL') private readonly ctrip_zuche_city_tbl: MongoService,
 		@Inject('CARS_PRICE_TBL') private readonly cars_price_tbl: MongoService,
+		@Inject('CARS_PRICE_FORMAT_TBL') private readonly cars_price_format_tbl: MongoService,
+		@Inject('REDIS_CONNECTION') private readonly redis: any,
+		
 		private readonly helper: HelperService,
 		private readonly config: ConfigService,
 		private readonly http: HttpService
@@ -43,7 +50,7 @@ export class GrabService {
 				}),
 				password: this.helper.getPassword(),
 			};
-
+ 
 			// // 先打开首页注入cookie
 			// const page1 = await browser.newPage();
 			// await page1.authenticate(proxyAuthConfig);
@@ -107,7 +114,7 @@ export class GrabService {
 
 	async getZZCCarList(data: GetCarListParamsDto): Promise<any>{
 		const {data: getClidResult} = await this.http.request({
-			url: 'http://api-crc.crd-prex.zuzuche.com/frontend/search',
+			url: 'http://api-crc.int.zuzuche.com/backend/search/create',
 			method: 'post',
 			data: {
 				_source: 60,
@@ -135,12 +142,12 @@ export class GrabService {
 				}
 			}
 		}).toPromise();
-
+		
 		await this.helper.sleep(3000);
 		if(getClidResult.code === 0){
 			const clid = getClidResult.data.clid;
 			const {data: result} = await this.http.request({
-				url: 'http://api-crc.crd-prex.zuzuche.com/frontend/search/v2/list',
+				url: 'http://api-crc.int.zuzuche.com/frontend/search/v2/list',
 				method: 'post',
 				data: {
 					_source: 60,
@@ -161,11 +168,20 @@ export class GrabService {
 
 	async updateCars(_id: String, data: MongoCarsUpdateDataDto){
 		await this.cars_price_tbl.updateOne({_id}, data);
+		const resultRedisKey = this.config.get('resultRedisKey');
+		const redisExpTime = this.config.get('redisExpTime');
+		await this.redis.hset(`${resultRedisKey}_${_id}`, 'ctrip' , JSON.stringify(data.ctripResult))
+		await this.redis.hset(`${resultRedisKey}_${_id}`, 'zzc' , JSON.stringify(data.zzcResult))
+		await this.redis.expire(`${resultRedisKey}_${_id}`, redisExpTime);
 		return this.cars_price_tbl.findOne({_id});
 	}
 
 	async getCars(_id: String){
-		return this.cars_price_tbl.findOne({_id});
+		const resultRedisKey = this.config.get('resultRedisKey');
+		return Promise.all([
+			this.redis.hget(`${resultRedisKey}_${_id}`, 'ctrip'),
+			this.redis.hget(`${resultRedisKey}_${_id}`, 'zzc')
+		]);
 	}
 
 	findCars(qid: String, queryTime: Date){
@@ -178,6 +194,118 @@ export class GrabService {
 		return crypto.createHash('md5').update(`${data.pname}|${data.rname}|${data.plat}|${data.plng}|${data.rlat}|${data.rlng}|${data.ptime}|${data.rtime}`).digest('hex')
 	}
 
+	async format(ctripResult, zzcResult){
+		const ctripCars = {};
+		const zzcCars = {};
+		const ctripCarsMap = {};
+		const zzcCarsMap = {};
+		const resultList = [];
+		let zzcLength = 0;
+		// 格式化携程数据
+		for(const vehicleList of ctripResult.vehicleList){
+			ctripCars[vehicleList.vehicleCode] = vehicleList;
+			
+		}
+
+		for(const list of zzcResult.data.list){
+			for(let car of list.groups_list){
+				car.dealerName = zzcResult.data.vars.dealers[car.dealerId].name;
+				car.dealerCtripName = storeList[car.dealerName];
+				zzcLength++;
+			}
+			zzcCars[list.list_id] = list;
+		}
+
+		const ctripVehicleID = await this.getByCtripVehicleID(Object.keys(ctripCars));
+		const allCars = ctripVehicleID.data.data.list;
+		for(let id in ctripCars){
+			// 找到携程车型对应价格
+			for(const productGroups of ctripResult.productGroups){
+				for(const productList of productGroups.productList){
+					if(id === productList.vehicleCode){
+						for(let vendorPrice of productList.vendorPriceList){
+							const key = `${productList.vehicleCode}_${(vendorPrice.vendorName)}`;
+							// 格式化携程数据
+							ctripCarsMap[key] =  {
+								name: ctripCars[id].name,
+								vehicleCode: ctripCars[id].vehicleCode,
+								vendorPrice,
+							}
+						}
+					}
+				}
+			}
+
+			// 找到携程车型对应租租车车型id
+			for(const cars of allCars){
+				if(cars.ctrip.carTypeCode === id && cars.zzc.carTypeCode && zzcCars[cars.zzc.carTypeCode]){
+					for(const car of zzcCars[cars.zzc.carTypeCode].groups_list){
+						const key = `${id}_${(car.dealerCtripName || car.dealerName)}`;
+						// 格式化租租车数据
+						zzcCarsMap[key] =  {
+							list_id: zzcCars[cars.zzc.carTypeCode].list_id,
+							brand: zzcCars[cars.zzc.carTypeCode].brand,
+							title: zzcCars[cars.zzc.carTypeCode].title,
+							vendorPrice: car
+						}
+					}
+					
+					// 删除已添加车型
+					delete zzcCars[cars.zzc.carTypeCode];
+					break;
+				}
+			}
+		}
+
+		// 生成结果数组
+		for(let key in ctripCarsMap){
+			resultList.push({
+				name: ctripCarsMap[key].name,
+				ctrip: ctripCarsMap[key],
+				zzc: zzcCarsMap[key],
+			});
+			// 删除已添加车型
+			delete zzcCarsMap[key];
+		}
+
+		// 添加剩余未匹配的租租车数据
+		for(let key in zzcCarsMap){
+			resultList.push({
+				name: zzcCarsMap[key].title,
+				zzc: zzcCarsMap[key]
+			})
+		}
+
+		// 添加剩余未匹配的租租车数据 
+		for(let id in zzcCars){
+			for(const car of zzcCars[id].groups_list){
+				resultList.push({
+					name: zzcCars[id].title,
+					zzc: {
+						list_id: zzcCars[id].list_id,
+						brand: zzcCars[id].brand,
+						title: zzcCars[id].title,	
+						vendorPrice: car
+					},
+				})
+			}
+		}
+
+		return {
+			list: resultList,
+			ctripCars: Object.keys(ctripCarsMap).length,
+			zzcCars: zzcLength,
+		};
+	}
+
+	// 保存格式化后数据
+	saveFormatData(data){
+		return this.cars_price_format_tbl.insertMany(data);
+	}
+
+	getFormatData(data){
+		return this.cars_price_format_tbl.findOne(data);
+	}
 
 	getByCtripVehicleID(ctripVehicleIDs) {
 		return this.http.request({

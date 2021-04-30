@@ -18,7 +18,6 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    
     "test": "ns start ./dist/main.js -e test -i 2 -n demo -d",
     "prod": "ns start ./dist/main.js -i 4 -n demo -d",
     "stop": "ns stop demo",
