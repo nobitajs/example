@@ -18,6 +18,7 @@ export class IndexController {
 
 	@Get('/getSizeId')
 	async getSizeId(@Query() data: IndexGetSizeIdDataDto){
+		console.log(data)
 		return await this.indexService.getSizeId(data);
 	}
 }
