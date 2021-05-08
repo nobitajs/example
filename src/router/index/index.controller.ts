@@ -63,12 +63,12 @@ export class IndexController {
 		if(arr.length > 0){
 			download(arr, {title: `tiktok`, parallel: 5}).then(() => {
 				console.log('下载完成');
-				// this.helper.sleep(1000);
-				// this.http.get(`http://127.0.0.1:6001/download`).toPromise().then()
+				this.helper.sleep(1000);
+				this.http.get(`http://127.0.0.1:6001/download`).toPromise().then()
 			})
 		}else{
-			// this.helper.sleep(10000);
-			// this.http.get(`http://127.0.0.1:6001/download`).toPromise().then()
+			this.helper.sleep(10000);
+			this.http.get(`http://127.0.0.1:6001/download`).toPromise().then()
 		}
 
 		return '开始下载' + new Date().getTime();

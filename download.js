@@ -85,12 +85,12 @@ function downloadFile(image = {}, options = {}, callback = () => {}){
         })
 
     fetch(url, {
-        headers: {
-            Host: 'v25.tiktokcdn.com',
-            'User-Agent': "TikTok 17.8.0 rv:178011 (iPhone; iOS 12.3.1; zh-Hans_US) Cronet"
-        },
+        // headers: {
+        //     Host: 'v25.tiktokcdn.com',
+        //     'User-Agent': "TikTok 17.8.0 rv:178011 (iPhone; iOS 12.3.1; zh-Hans_US) Cronet"
+        // },
         timeout: timeout + 300,
-        // agent: new HttpsProxyAgent('http://127.0.0.1:1087')
+        agent: new HttpsProxyAgent('http://127.0.0.1:1087')
     })
     .then(res => res.body.pipe(writeStream))
     .catch((err) => {
