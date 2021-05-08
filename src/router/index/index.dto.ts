@@ -5,4 +5,5 @@ export class IndexDataDto {
 
 export class IndexGetSizeIdDataDto {
 	readonly gid: string;
+	readonly adId: string;
 }

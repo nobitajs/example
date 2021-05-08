@@ -8,7 +8,7 @@ import { HelperService } from '../../common/providers/helper/helper.service';
 import { IndexDataDto, IndexGetSizeIdDataDto } from './index.dto';
 
 let time = 0;
-let sizeId = ['6919228632652532000']
+let sizeId = ['6919228632691525890']
 @Injectable()
 export class IndexService {
 
@@ -33,6 +33,22 @@ export class IndexService {
 					url: 'https://www.huahaicang.cn/api/neptune/neptune/cart/add/v2',
 					method: 'post',
 					data: qs.stringify({
+						// sizeNum: 1,
+						// source: 'huahaicang_iphone',
+						// sizeId: '6919228632765389068',
+						// clientType: 'wap',
+						// marsCid: '1615348836173_9cda4f8892b516f109634071bd1692ba',
+						// appVersion: '7.0.0',
+						// version: '7.0.0',
+						// deliveryAreaId: '944101103104',
+						// method: 'POST',
+						// 'hhc-param': '68c57730c3796faf18a9d277505bad67b934b3ad',
+						// deviveryAreaId: '944101103104',
+						// timestamp: '1620360344',
+						// nonce: 'c36250d8e917d1794500b2c2b05c7498',
+						// sign: 'dd5779a17750ab1a7c9782c5122d13e7',
+
+						clientType: 'wap',
 						sizeNum: '1',
 						source: 'huahaicang_iphone',
 						sizeId: sizeId[i],
@@ -51,7 +67,7 @@ export class IndexService {
 						'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
 						'Content-Type': 'application/x-www-form-urlencoded',
 						referer: 'https://www.huahaicang.cn/',
-						cookie: 'hhc-param=65866eed01f320d3e7c6ff661779c4f89b26ff41; _t_offset=0; mars_cid=1619752948036_1ae01fcddabcfd52b3d8cb7b61b3fa64; areaId=944101103101; WAP[p_wh]=VIP_NH; warehouse=VIP_NH; m_vip_province=104104101103; WAP[p_area]=%25E5%25B9%25BF%25E4%25B8%259C%25E7%259C%2581.%25E5%25B9%25BF%25E5%25B7%259E%25E5%25B8%2582.%25E8%258D%2594%25E6%25B9%25BE%25E5%258C%25BA; saturn=vgdfvt451cq2i150jcrpnojj0v0; triton=CCC8C0CE745C8596F8AEAE63C732638C6F2E249C; _t_=1619753094',
+						cookie: 'mars_cid=1615348836173_9cda4f8892b516f109634071bd1692ba; hhc-param=68c57730c3796faf18a9d277505bad67b934b3ad; _t_offset=0; WAP[p_wh]=VIP_NH; warehouse=VIP_NH; m_vip_province=104104101103; WAP[p_area]=%25E5%25B9%25BF%25E4%25B8%259C%25E7%259C%2581.%25E5%25B9%25BF%25E5%25B7%259E%25E5%25B8%2582.%25E8%258D%2594%25E6%25B9%25BE%25E5%258C%25BA; areaId=944101103104; saturn=vrqbgh1vaoh5ogdf8d9abalcgq2; triton=CCC8C0CE745C8596F8AEAE63C732638C6F2E249C; _t_=1620359651',
 					}
 				}));
 				i++;
@@ -79,22 +95,26 @@ export class IndexService {
 
 	getSizeId(data: IndexGetSizeIdDataDto){
 		return axios({
-			url: 'https://www.huahaicang.cn/api/neptune/goods/detail_with_logo',
-			method: 'post',
-			data: qs.stringify({
-				gid: data.gid,
+			url: 'https://huahaicang-api.vip.com/hhc/wap/goods_detail/v1',
+			method: 'get',
+			params: {
+				goodsId: data.gid,
 				clientType: 'wap',
 				method: 'GET',
-			}),
+				adId: data.adId,
+				deliveryAreaId: '944101103104'
+			},
 			headers: {
 				'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
 				'Content-Type': 'application/x-www-form-urlencoded',
 				referer: 'https://www.huahaicang.cn/',
 			}
 		}).then(res => {
-			return res.data.data.goodsStock.sizes.map((item) => {
-				return `${item.name} : ${item.sizeId}`
-			})
+			return res.data.data.goodsList.map(items => (
+				items.sizes.map((item) => {
+					return `${item.sizeName} : ${item.sizeId}`
+				})
+			))
 		})
 	}
 }
