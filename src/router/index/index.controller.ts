@@ -14,6 +14,7 @@ export class IndexController {
 
 	@Get()
 	async index() {
+		this.kafka.log('123')
 		return this.indexService.getName();
 	}
 }

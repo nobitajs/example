@@ -13,11 +13,10 @@ export class KafkaService {
 		this.ip = IP.address();
 		this.env = this.config.get('env');
 		this.pid = process.pid;
-		this.producer.on('ready', () => {
+		this.producer && this.producer.on('ready', () => {
 			this.log('kafka链接成功');
-		});
-
-		this.producer.on('error', () => {
+		})
+		.on('error', () => {
 			this.log('kafka链接失败');
 		});
 	}
@@ -39,6 +38,7 @@ export class KafkaService {
 	}
 
 	private send(data, type) {
+		const kafkaConfig = this.config.get('kafka') || {};
 		const logData = ({
 			logType: type,
 			appName: this.config.get('appName') || 'app',
@@ -48,10 +48,9 @@ export class KafkaService {
 			time: moment().format('YYYY-MM-DD HH:mm:ss'),
 			data
 		});
-		if (this.env == 'local') {
+		if (this.env == 'local' || !kafkaConfig.topic) {
 			console.log(logData);
 		} else {
-			const kafkaConfig = this.config.get('kafka') || {};
 			this.producer.send([{
 				topic: kafkaConfig.topic,
 				messages: JSON.stringify(logData)
