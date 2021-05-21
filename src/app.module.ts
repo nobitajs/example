@@ -27,10 +27,10 @@ export class AppModule implements NestModule {
     private readonly config: ConfigService,
   ) { }
   configure(consumer: MiddlewareConsumer) {
-    if (this.config.get('env') === 'local') {
+    // if (this.config.get('env') === 'local') {
       consumer
         .apply(CorsMiddleware)
         .forRoutes('*');
-    }
+    // }
   }
 }

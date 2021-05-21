@@ -8,6 +8,7 @@ export const KafkaConnectionProviders = {
 		const Producer = Kafka.Producer;
 
 		if(!kafkaConfig.host) return 
+
 		const client = new Kafka.KafkaClient({ kafkaHost: kafkaConfig.host });
 		const producer = new Producer(client);
 		return producer;

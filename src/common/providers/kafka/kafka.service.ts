@@ -48,7 +48,7 @@ export class KafkaService {
 			time: moment().format('YYYY-MM-DD HH:mm:ss'),
 			data
 		});
-		if (this.env == 'local' || !kafkaConfig) {
+		if (this.env == 'prod' || !kafkaConfig) {
 			console.log(logData);
 		} else {
 			this.producer.send([{
