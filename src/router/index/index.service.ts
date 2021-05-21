@@ -8,7 +8,7 @@ import { HelperService } from '../../common/providers/helper/helper.service';
 import { IndexDataDto, IndexGetSizeIdDataDto } from './index.dto';
 
 let time = 0;
-let sizeId = ['6919302856292136449', '6919228632634267926', '6919257774089795998', '6919291198117017502', '6919228632634378497', '6919228632409647361']
+let sizeId = ['6919302856292136449', '6919228632634267926', '6919257774089795998', '6919291198117017502', '6919228632634378497', '6919228632409647361', '6919302856105801246', '6919302856461903390']
 @Injectable()
 export class IndexService {
 
@@ -96,6 +96,7 @@ export class IndexService {
 	getSizeId(data: IndexGetSizeIdDataDto){
 		return axios({
 			url: 'https://huahaicang-api.vip.com/hhc/wap/goods_detail/v1',
+			// url: 'https://www.huahaicang.cn/api/neptune/goods/detail_with_logo',
 			method: 'get',
 			params: {
 				goodsId: data.gid,
