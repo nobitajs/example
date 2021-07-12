@@ -7,7 +7,7 @@ async function download(images, options = {}){
     const { title = '名称', parallel = 5 } = options;
     const total = images.length;
     bar = new ProgressBar(`${title}(:current/:total): [:bar] [:percent]`, { total: +total, width: 50 });
-    let queue = parallel;
+    let queue = parallel < total ? parallel : total;
     let finish = null;
     
     function callback(allPath, n){
@@ -21,7 +21,6 @@ async function download(images, options = {}){
             queue++
             downloadFile(image, options, callback);
         }
-
         // bar.tick({text: images, queue, '===queue====')
         if(queue <= 0){
             bar.interrupt(`${title} 下载完成`);
