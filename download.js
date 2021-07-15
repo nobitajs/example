@@ -82,7 +82,9 @@ function downloadFile(image = {}, options = {}, callback = () => {}){
             timer = setTimeout(timeoutCallback, timeout);
         })
 
-    fetch(url, {timeout: timeout + 300})
+    fetch(url, {
+        timeout: timeout + 300,
+    })
         .then(res => res.body.pipe(writeStream))
         .catch((err) => {
             bar ? bar.interrupt(`${allPath} 请求超时`) : console.log(`${allPath} 请求超时`);
