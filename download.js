@@ -84,10 +84,14 @@ function downloadFile(image = {}, options = {}, callback = () => {}){
 
     fetch(url, {
         timeout: timeout + 300,
+        header: {
+            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.3 Mobile/15E148 Safari/604.1",
+
+        }
     })
         .then(res => res.body.pipe(writeStream))
         .catch((err) => {
-            bar ? bar.interrupt(`${allPath} 请求超时`) : console.log(`${allPath} 请求超时`);
+            bar ? bar.interrupt(`${url} 请求超时`) : console.log(`${url} 请求超时`);
             clearTimeout(tryAgain);
             tryAgain = setTimeout(failCallBack, gainInterval);
         })
