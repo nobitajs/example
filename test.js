@@ -4,9 +4,7 @@ const base64decode = require('./base64decode');
 const download = require('./download');
 const Iconv = require('iconv-lite');
 
-const urls = 
-[
-
+const urls = [
 ]
 // https://www.manhuaren.com/
 // http://mangabz.com/m${id}
@@ -173,4 +171,4 @@ async function a(){
     console.log('========全部下载完成========')
 }
 
-run().then()
+a().then()
