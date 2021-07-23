@@ -48,7 +48,6 @@ async function run(){
             console.log('请求超时', host)
         }
     }
-
     console.log('========全部下载完成========')
 }
 
@@ -98,6 +97,56 @@ async function run2(){
     console.log('========全部下载完成========')
 }
 
+
+async function run3(){
+    console.log('===开始执行爬虫===')
+    for(const item of urls){
+        const [url, title] = item;
+        const arr = [];
+        let index = 1;
+        let total = 2;
+        while(index <= total){
+            const host = `http://m.ikkdm.com${url}${index}.htm`;
+            console.log('===发起请求===', host)
+            const res = await request({
+                encoding: null,
+                url: host,
+                timeout: 5000,
+                headers: {
+                    "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.3 Mobile/15E148 Safari/604.1",
+                    // "Cookie": "__cfduid=d161af501d346187891291234a938f558f451611040011; ComicHistoryitem_zh=History=265,637466651236912874706,108995,1,0,0,0,1&ViewType=0; mangabzimgpage=108995|1:1; MANGABZ_MACHINEKEY=c5044967-7eb8-4986-a485-55bb123d8f275dc"
+                    // Referer: host
+                }
+            }).then((body) => {
+                return Iconv.decode(body, 'gb2312').toString();
+            }).catch(e => {
+                console.log('请求超时', host, e)
+                urls.push(url)
+                return null
+            });
+            console.log('接收请求', host)
+    
+            if(res){
+                total = res.match(/<li>\d+\/\d+/)[0].split('/')[1];
+                const img = res.split(`IMG SRC='"+m2007+"`)[1].split(`'></a>`)[0];
+                arr.push({
+                    url: `https://tu.kukudm.com/${encodeURI(img)}`,
+                    path: `../JOJO奇妙冒险/${title}/`,
+                    fileName: index,
+                })
+            
+            }else{
+                console.log('请求超时', host)
+            }
+            index++;
+
+        }
+        console.log(arr);
+        await download(arr, {title, parallel: 5})
+    }
+    console.log('========全部下载完成========')
+}
+
 async function other() {
     let i = 141;
     while(i <= 141){
@@ -115,9 +164,7 @@ async function other() {
             })
             j++;
         }
-        // console.log(arr, i, page)
-        const res = await download(arr, {title: `第${i}话`, parallel: 4})
-        console.log(res, '===');
+        await download(arr, {title: `第${i}话`, parallel: 4})
         i++;
     }
 }
@@ -125,7 +172,7 @@ async function other() {
 async function a(){
     console.log('===开始执行爬虫===', urls.length)
     for(const id of urls){
-        const host = `http://m.pufei8.com/${id}`;
+        const host = `http://m.pufei8.com${id}`;
         console.log('===发起请求===', host)
        
         const res = await request({
