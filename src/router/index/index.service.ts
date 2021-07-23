@@ -8,7 +8,7 @@ import { HelperService } from '../../common/providers/helper/helper.service';
 import { IndexDataDto, IndexGetSizeIdDataDto } from './index.dto';
 
 let time = 0;
-let sizeId = ['6919302856292136449', '6919228632634267926', '6919257774089795998', '6919291198117017502', '6919228632634378497', '6919228632409647361', '6919302856105801246', '6919302856461903390']
+let sizeId = ['6919302856292136449', "6919228632486402313"]
 @Injectable()
 export class IndexService {
 
@@ -67,7 +67,7 @@ export class IndexService {
 						'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
 						'Content-Type': 'application/x-www-form-urlencoded',
 						referer: 'https://www.huahaicang.cn/',
-						cookie: 'mars_cid=1615348836173_9cda4f8892b516f109634071bd1692ba; hhc-param=68c57730c3796faf18a9d277505bad67b934b3ad; WAP[p_wh]=VIP_NH; warehouse=VIP_NH; m_vip_province=104104101103; WAP[p_area]=%25E5%25B9%25BF%25E4%25B8%259C%25E7%259C%2581.%25E5%25B9%25BF%25E5%25B7%259E%25E5%25B8%2582.%25E8%258D%2594%25E6%25B9%25BE%25E5%258C%25BA; areaId=944101103104; _t_offset=0; _t_=1621563533; saturn=viurbkuhbbp6ruf94joebe2o4p0; triton=CCC8C0CE745C8596F8AEAE63C732638C6F2E249C',
+						cookie: 'hhc-param=f1f1a14c333f05ed83547aa24775700f9123d83b; mars_cid=1627008663423_4698d3b69e247a6624d4303c4c835500; _t_offset=0; saturn=vs8klqetdrc6244v65pdtrb31g2; triton=B7673761B6BFE5EED864B1AEC15E0B91FA688707; areaId=944101103101; WAP[p_wh]=VIP_NH; warehouse=VIP_NH; m_vip_province=104104101103; WAP[p_area]=%25E5%25B9%25BF%25E4%25B8%259C%25E7%259C%2581.%25E5%25B9%25BF%25E5%25B7%259E%25E5%25B8%2582.%25E8%258D%2594%25E6%25B9%25BE%25E5%258C%25BA; _t_=1627008745',
 					}
 				}));
 				i++;
