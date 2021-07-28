@@ -1,6 +1,8 @@
 const ProgressBar = require('progress');
 const fs = require('fs');
 const fetch = require('node-fetch');
+var log = require('debug')('debug');
+
 
 let bar = null;
 async function download(images, options = {}){
@@ -14,7 +16,6 @@ async function download(images, options = {}){
         bar.tick(1);
         const image = images.shift();
         // console.log(allPath, n, '============');
-        // bar.interrupt(`${allPath} 下载完成`);
 
         queue--;
         if(image){
@@ -23,7 +24,7 @@ async function download(images, options = {}){
         }
         // bar.tick({text: images, queue, '===queue====')
         if(queue <= 0){
-            bar.interrupt(`${title} 下载完成`);
+            log(`${title} 下载完成`);
             finish(`${title}下载完成`);
         }
     }
@@ -68,8 +69,8 @@ function downloadFile(image = {}, options = {}, callback = () => {}){
             clearTimeout(timer);
             callback(allPath, 1);
         })
-        .on('error', () => {
-            bar ? bar.interrupt(`${allPath} 下载错误`) : console.log(`${allPath} 下载错误`);
+        .on('error', (err) => {
+            log(`${url} 下载错误`, err)
             clearTimeout(tryAgain);
             tryAgain = setTimeout(failCallBack, gainInterval);
         })
@@ -91,7 +92,7 @@ function downloadFile(image = {}, options = {}, callback = () => {}){
     })
         .then(res => res.body.pipe(writeStream))
         .catch((err) => {
-            bar ? bar.interrupt(`${url} 请求超时`) : console.log(`${url} 请求超时`);
+            log(`${url} 请求超时`, err);
             clearTimeout(tryAgain);
             tryAgain = setTimeout(failCallBack, gainInterval);
         })
