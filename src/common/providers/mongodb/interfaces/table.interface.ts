@@ -1,5 +1,6 @@
+
 import { MongoService } from '../mongodb.service';
 
-export interface UserDeviceInterface {
+export interface TableInterface {
 	[key: string]: MongoService
 };

@@ -7,9 +7,9 @@ const config = {
 	// 	db: 0
 	// },
 
-	// mongo: {
-	// 	url: 'mongodb://127.0.0.1:27017/app_push',
-	// },
+	mongo: {
+		url: 'mongodb://10.4.35.58:27017/admin',
+	},
 
 
 };

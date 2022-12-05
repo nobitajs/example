@@ -10,6 +10,15 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "incremental": true
-  }
+    "incremental": true,
+    "paths": {
+      "~common/*": [
+        "src/common/*"
+      ]
+    }
+  },
+  "exclude": [
+    "dist",
+    "node_modules"
+  ],
 }

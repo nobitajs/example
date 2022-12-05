@@ -1,7 +1,7 @@
-import { Controller, Get, Inject } from '@nestjs/common';
-import { MongoService } from '../../common/providers/mongodb/mongodb.service';
+import { Controller, Get, Inject, UsePipes } from '@nestjs/common';
 import { IndexService } from './index.service';
 import { KafkaService } from '../../common/providers/kafka/kafka.service';
+import { IndexJoiValidationPipe } from './index.pipe';
 
 
 @Controller('/')
@@ -9,12 +9,11 @@ export class IndexController {
 	constructor(
 		private readonly indexService: IndexService,
 		private readonly kafka: KafkaService,
-		
 	) { }
 
 	@Get()
+	@UsePipes(new IndexJoiValidationPipe())
 	async index() {
-		this.kafka.log('123')
 		return this.indexService.getName();
 	}
 }
