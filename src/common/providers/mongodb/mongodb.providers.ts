@@ -1,8 +1,8 @@
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import AllSchema from './mongodb.schema';
 import { MongoService } from './mongodb.service';
 import { ConfigService } from '../config/config.service';
-import * as merge from 'lodash/merge';
+import merge from 'lodash/merge';
 
 const provides = [];
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import defaultConfig from '../../../config/config.default';
-import * as merge from 'lodash/merge';
+import defaultConfig from '@/config/config.default';
+import merge from 'lodash/merge';
 
 @Injectable()
 export class ConfigService {

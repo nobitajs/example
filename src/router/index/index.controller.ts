@@ -1,7 +1,7 @@
 import { Controller, Get, Inject, UsePipes } from '@nestjs/common';
 import { IndexService } from './index.service';
 import { IndexJoiValidationPipe } from './index.pipe';
-
+import dayjs from 'dayjs';
 
 @Controller('/')
 export class IndexController {
@@ -12,8 +12,7 @@ export class IndexController {
 	@Get()
 	@UsePipes(new IndexJoiValidationPipe())
 	async index() {
-		const a: any = {};
-		a.bb.cc
+		console.log(dayjs())
 		return this.indexService.getName();
 	}
 }

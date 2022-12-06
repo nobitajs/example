@@ -1,5 +1,5 @@
 import { ConfigService } from '../config/config.service';
-import * as log4js from 'log4js';
+import log4js from 'log4js';
 
 // declare var console
 export const LoggerInitProviders = {

@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { MongoService } from '../../common/providers/mongodb/mongodb.service';
+import { MongoService } from '@/common/providers/mongodb/mongodb.service';
 
 @Injectable()
 export class IndexService {

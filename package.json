@@ -20,7 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prod": "ns start ./dist/main.js -i 4 -n demo -d",
     "stop": "ns stop demo",
-    "list": "ns list demo"
+    "list": "ns list demo",
+    "init": "tslint --init"
   },
   "dependencies": {
     "@hapi/joi": "16.1.8",
@@ -28,12 +29,12 @@
     "@nestjs/core": "^7.6.15",
     "@nestjs/platform-express": "^7.6.15",
     "cache-manager": "2.10.1",
+    "dayjs": "^1.11.6",
     "helmet": "3.21.2",
     "ioredis": "^5.2.4",
     "ip": "1.1.5",
     "kafka-node": "5.0.0",
     "log4js": "^6.7.1",
-    "moment": "^2.29.4",
     "mongoose": "5.8.3",
     "nobita-scripts": "0.3.9",
     "node-schedule": "^2.1.0",

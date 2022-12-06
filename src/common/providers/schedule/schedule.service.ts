@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import * as schedule from 'node-schedule';
+import schedule from 'node-schedule';
 
 @Injectable()
 export class ScheduleService {

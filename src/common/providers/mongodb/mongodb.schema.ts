@@ -1,5 +1,5 @@
-import * as glob from 'glob';
-import * as path from 'path';
+import glob from 'glob';
+import path from 'path';
 let schema = {};
 
 for (const src of glob.sync(path.resolve(__dirname, './schema/*.schema.d.ts'))) {

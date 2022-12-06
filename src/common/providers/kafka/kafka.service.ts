@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '../config/config.service';
-import * as IP from 'ip';
-import * as moment from 'moment';
+import dayjs from 'dayjs';
+import IP from 'ip';
 
 @Injectable()
 export class KafkaService {
@@ -45,7 +45,7 @@ export class KafkaService {
 			env: this.env,
 			ip: this.ip,
 			pid: this.pid,
-			time: moment().format('YYYY-MM-DD HH:mm:ss'),
+			time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
 			data
 		});
 		if (this.env == 'local' || !kafkaConfig.topic) {

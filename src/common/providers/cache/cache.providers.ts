@@ -1,4 +1,4 @@
-import * as cacheManager from 'cache-manager';
+import cacheManager from 'cache-manager';
 
 export const CacheConnectionProviders = {
 	provide: 'CACHE_CONNECTION',

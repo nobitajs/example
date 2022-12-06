@@ -1,7 +1,7 @@
 import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException } from '@nestjs/common';
-import * as Joi from '@hapi/joi';
+import Joi from '@hapi/joi';
 import { IndexDataDto } from './index.dto';
-import { RejectExceptionsFilter } from '../../common/exception/reject.exception';
+import { RejectExceptionsFilter } from '@/common/exception/reject.exception';
 
 const addDataPipe = Joi.object({
 	id: Joi.string().empty().required(),
