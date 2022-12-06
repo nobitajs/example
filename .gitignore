@@ -8,3 +8,4 @@ dump.rdb
 .idea/
 package-lock.json
 dist
+logs

@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 
 export interface MongoInterface {
-	list: any,
+	list: Array<Object>,
 	pages: {
 		total: Number,
 		page: Number,

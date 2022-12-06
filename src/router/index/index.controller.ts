@@ -1,6 +1,5 @@
 import { Controller, Get, Inject, UsePipes } from '@nestjs/common';
 import { IndexService } from './index.service';
-import { KafkaService } from '../../common/providers/kafka/kafka.service';
 import { IndexJoiValidationPipe } from './index.pipe';
 
 
@@ -8,12 +7,13 @@ import { IndexJoiValidationPipe } from './index.pipe';
 export class IndexController {
 	constructor(
 		private readonly indexService: IndexService,
-		private readonly kafka: KafkaService,
 	) { }
 
 	@Get()
 	@UsePipes(new IndexJoiValidationPipe())
 	async index() {
+		const a: any = {};
+		a.bb.cc
 		return this.indexService.getName();
 	}
 }

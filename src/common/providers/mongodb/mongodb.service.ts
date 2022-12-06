@@ -1,20 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
-import { KafkaService } from '../kafka/kafka.service';
 
 @Injectable()
 export class MongoService {
 
-	constructor(databaseName, collectionName, model, kafka) {
+	constructor(databaseName, collectionName, model) {
 		this.databaseName = databaseName;
 		this.collectionName = collectionName;
 		this.model = model;
-		this.kafka = kafka;
 	}
 	databaseName: string
 	collectionName: string
 	model: Model
-	kafka: KafkaService
 
 	async find(sql: any, options: any = {}): Promise<any> {
 		const startTime = new Date().getTime();
@@ -26,7 +23,7 @@ export class MongoService {
 			this.model.find(sql, options.filter, options)
 		]).then(([total, list]) => {
 			const endTIme = new Date().getTime();
-			this.kafka.log({
+			console.log('system', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -44,7 +41,7 @@ export class MongoService {
 			};
 		}).catch(error => {
 			const endTIme = new Date().getTime();
-			this.kafka.error({
+			console.error('systemError', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -61,7 +58,7 @@ export class MongoService {
 		const startTime = new Date().getTime();
 		return await this.model.findOne(sql, options.filter, options).then((data) => {
 			const endTIme = new Date().getTime();
-			this.kafka.log({
+			console.log('system', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -72,7 +69,7 @@ export class MongoService {
 			return data;
 		}).catch(error => {
 			const endTIme = new Date().getTime();
-			this.kafka.error({
+			console.error('systemError', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -89,7 +86,7 @@ export class MongoService {
 		const startTime = new Date().getTime();
 		return await this.model.insertMany(sql).then((data) => {
 			const endTIme = new Date().getTime();
-			this.kafka.log({
+			console.log('system', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -99,7 +96,7 @@ export class MongoService {
 			return data;
 		}).catch(error => {
 			const endTIme = new Date().getTime();
-			this.kafka.error({
+			console.error('systemError', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -115,7 +112,7 @@ export class MongoService {
 		const startTime = new Date().getTime();
 		return await this.model.insertMany(sql).then((data) => {
 			const endTIme = new Date().getTime();
-			this.kafka.log({
+			console.log('system', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -125,7 +122,7 @@ export class MongoService {
 			return data[0];
 		}).catch(error => {
 			const endTIme = new Date().getTime();
-			this.kafka.error({
+			console.error('systemError', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -146,7 +143,7 @@ export class MongoService {
 
 		return await this.model.updateMany(sql, newDate, params).then((data) => {
 			const endTIme = new Date().getTime();
-			this.kafka.log({
+			console.log('system', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -158,7 +155,7 @@ export class MongoService {
 			return data;
 		}).catch(error => {
 			const endTIme = new Date().getTime();
-			this.kafka.error({
+			console.error('systemError', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -181,7 +178,7 @@ export class MongoService {
 
 		return await this.model.updateOne(sql, newDate, params).then((data) => {
 			const endTIme = new Date().getTime();
-			this.kafka.log({
+			console.log('system', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -193,7 +190,7 @@ export class MongoService {
 			return data;
 		}).catch(error => {
 			const endTIme = new Date().getTime();
-			this.kafka.error({
+			console.error('systemError', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -211,7 +208,7 @@ export class MongoService {
 		const startTime = new Date().getTime();
 		return await this.model.deleteMany(sql).then((data) => {
 			const endTIme = new Date().getTime();
-			this.kafka.log({
+			console.log('system', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -221,7 +218,7 @@ export class MongoService {
 			return data;
 		}).catch(error => {
 			const endTIme = new Date().getTime();
-			this.kafka.log({
+			console.log('system', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -237,7 +234,7 @@ export class MongoService {
 		const startTime = new Date().getTime();
 		return await this.model.deleteOne(sql).then((data) => {
 			const endTIme = new Date().getTime();
-			this.kafka.log({
+			console.log('system', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -247,7 +244,7 @@ export class MongoService {
 			return data;
 		}).catch(error => {
 			const endTIme = new Date().getTime();
-			this.kafka.log({
+			console.log('system', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -263,7 +260,7 @@ export class MongoService {
 		const startTime = new Date().getTime();
 		return await this.model.aggregate(sql).then((data) => {
 			const endTIme = new Date().getTime();
-			this.kafka.log({
+			console.log('system', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -273,7 +270,7 @@ export class MongoService {
 			return data;
 		}).catch(error => {
 			const endTIme = new Date().getTime();
-			this.kafka.error({
+			console.error('systemError', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -289,7 +286,7 @@ export class MongoService {
 		const startTime = new Date().getTime();
 		return await this.model.collection.drop().then((data) => {
 			const endTIme = new Date().getTime();
-			this.kafka.log({
+			console.log('system', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,
@@ -298,7 +295,7 @@ export class MongoService {
 			return data;
 		}).catch(error => {
 			const endTIme = new Date().getTime();
-			this.kafka.log({
+			console.log('system', {
 				useTime: endTIme - startTime,
 				databaseName: this.databaseName,
 				collectionName: this.collectionName,

@@ -1,4 +1,4 @@
-import * as Redis from 'ioredis';
+import Redis from 'ioredis';
 import { ConfigService } from '../config/config.service';
 import { KafkaService } from '../kafka/kafka.service';
 
@@ -8,7 +8,7 @@ export const RedisConnectionProviders = [{
 		const redisConf = config.get('redis');
 		const redis: Redis = new Redis(redisConf);
 		redis.on('connect', () => {
-			kafka.log('redis链接成功');
+			console.log('system', 'redis链接成功');
 		});
 		return redis;
 	},
