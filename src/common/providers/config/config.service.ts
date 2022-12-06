@@ -5,7 +5,7 @@ import merge from 'lodash/merge';
 @Injectable()
 export class ConfigService {
   constructor() {
-    const env = 'local'
+    const env = process.env.RUN_ENV
     const config = require(`../../../config/config.${env}`);
     this.config = merge({
       env,

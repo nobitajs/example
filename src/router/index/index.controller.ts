@@ -12,7 +12,10 @@ export class IndexController {
 	@Get()
 	@UsePipes(new IndexJoiValidationPipe())
 	async index() {
-		console.log(dayjs())
+		// console.log(dayjs().sdxs)
+		var a :any = {}
+
+		a.b.x.e
 		return this.indexService.getName();
 	}
 }

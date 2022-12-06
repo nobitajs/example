@@ -1,8 +1,8 @@
 {
-  "name": "app_report",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "name": "example",
+  "version": "1.0.0",
+  "description": "example",
+  "author": "JJ",
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
@@ -18,10 +18,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prod": "ns start ./dist/main.js -i 4 -n demo -d",
-    "stop": "ns stop demo",
-    "list": "ns list demo",
-    "init": "tslint --init"
+    "prod": "ns start ./dist/main.js -i 4 -n example -d",
+    "stop": "ns stop example",
+    "list": "ns list example"
   },
   "dependencies": {
     "@hapi/joi": "16.1.8",
