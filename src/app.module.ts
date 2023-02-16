@@ -1,4 +1,4 @@
-import { Module, Global, NestModule, MiddlewareConsumer, HttpModule, HttpService, Inject } from '@nestjs/common';
+import { Module, Global, NestModule, MiddlewareConsumer, Inject } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { ConfigModule } from './common/providers/config/config.module';
 // import { KafkaModule } from './common/providers/kafka/kafka.module';
@@ -21,8 +21,8 @@ import { AllExceptionsFilter } from './common/exception/all.exception';
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
     }],
-  imports: [ConfigModule, LoggerModule, CacheModule, MongodbModule, ScheduleModule, HttpModule, HelperModule, RouterModule],
-  exports: [ConfigModule, LoggerModule, CacheModule, MongodbModule, ScheduleModule, HttpModule, HelperModule]
+  imports: [ConfigModule, LoggerModule, CacheModule, MongodbModule, ScheduleModule, HelperModule, RouterModule],
+  exports: [ConfigModule, LoggerModule, CacheModule, MongodbModule, ScheduleModule, HelperModule]
 })
 export class AppModule implements NestModule {
   constructor(
